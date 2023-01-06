@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Employees.bin" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Employees.txt" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Department.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Employee.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/Program.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/ReadAndSave.java" charset="UTF-8" />
+    <file url="PROJECT" charset="windows-1251" />
+  </component>
+</project>
