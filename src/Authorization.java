@@ -7,21 +7,31 @@ import java.util.Scanner;
 
 public class Authorization {
 
-    private String nameEmpl;
-    private String dateOfBirth;
+
     private String login;
     private String password;
+    private String nameChief;
     private List <Employee> employees;
+    private List <Department> departments;
+
 
     public void readData () {
         try(ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("Employees.bin"))){
             List <Employee> employees = (List<Employee>)objectInputStream.readObject();
-            this.employees = employees;
-        }
+            this.employees = employees;}
+        catch(IOException | ClassNotFoundException ex){System.out.println(ex.getMessage());}
+
+        /*System.out.println("Список сотрудников в Authorization: " + employees);*/
+    }
+
+        public void readDataDep () {
+        try(ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("Departaments.bin"))){
+            List <Department> departments = (List<Department>)objectInputStream.readObject();
+            this.departments = departments;}
         catch(IOException | ClassNotFoundException ex){
-            System.out.println(ex.getMessage());
-        };
-        System.out.println("Список в Authorization: " + employees);
+            System.out.println(ex.getMessage());}
+
+        System.out.println("Список отделов в Authorization: " + departments);
     }
     public List<Employee> getEmployees() {      //ПЕРЕДАЧА СПИСКА ИЗ ФАЙЛА в Program
         return employees;
@@ -40,13 +50,10 @@ public class Authorization {
             System.out.print("пароль: ");
             password = ScanRegStr.nextLine();
             if (verificationAuthorization(login, password) != null) {
-                System.out.println("Вы успешно авторизованы");
-                return true;
-            }
+                System.out.println("Вы успешно авторизованы!");
+                return true;}
             if (verificationAuthorization(login, password) == null) {
-                System.out.println("Неверный логин или пароль");
-            }
-        }
+                System.out.println("Неверный логин или пароль");}}
         return false;
     }
 
@@ -66,23 +73,58 @@ public class Authorization {
         dateOfBirth = ScanRegStr.nextLine();
         gender = true;
         boolean proverka = true;
-        while (proverka) {
+        while (proverka == true) {
             System.out.println("выберете ваш пол: " +
                     "\n1 - мужской" +
                     "\n2 - женский");
             int num = ScanRegInt.nextInt();
-            if (num == 0 || num == 1)
+            if (num == 1)
                 proverka = false;
-            else System.out.print("\nПол указан неверно!");
-            if (num == 0)
+            if (num == 2) {
                 gender = false;
-        }
+                proverka = false;}
+            if (num != 1 && num != 2)
+                System.out.println("пол указан некорректно!");}
         System.out.print("номер мобильного телефона: ");
         numberPh  = ScanRegStr.nextLine();
-        System.out.print("занимаемую должность: ");
-        position = ScanRegStr.nextLine();
-        System.out.print("название отдела: ");
-        nameDep = ScanRegStr.nextLine();
+        proverka = true;
+        position = null;
+        while (proverka == true) {
+            System.out.print("занимаемую должность: " +
+                    "\n1. Руководитель;" +
+                    "\n2. Специалист;" +
+                    "\n3. Рабочий." +
+                    "\nОтвет - ");
+            int num = ScanRegInt.nextInt();
+            if (num == 1) {
+                System.out.println("Данная вакансия на данный момент закрыта, повторите ввод занимаемой должности");}
+            if (num == 2) {
+                position = "Специалист";
+                proverka = false;}
+            if (num == 3) {
+                position = "Рабочий";
+                proverka = false;}
+            if (num != 1 && num != 2 && num != 3)System.out.println("должность указана некорректно!");}
+        proverka = true;
+        nameDep = null;
+        while (proverka == true) {
+            System.out.print("название отдела: " +
+                    "\n1. Бухгалтерия;" +
+                    "\n2. IT;" +
+                    "\n3. Производство." +
+                    "\nОтвет - ");
+            int num = ScanRegInt.nextInt();
+            if (num == 1) {
+                nameDep = "Бухгалтерия";
+                proverka = false;}
+            if (num == 2) {
+                nameDep = "IT";
+                proverka = false;}
+            if (num == 3) {
+                nameDep = "Производство";
+                proverka = false;}
+            if (num != 1 && num != 2 && num != 3)System.out.println("отдел указан некорректно!");
+        }
         System.out.print("заработную плату: ");
         salary = ScanRegInt.nextInt();
         proverka = true;
@@ -93,11 +135,9 @@ public class Authorization {
                 proverka = false;
                 System.out.print("желаемый пароль: ");
                 password = ScanRegStr.nextLine();
-                employees.add(new Employee (nameEmpl, dateOfBirth, gender, numberPh, position, nameDep, "тестовый начальник", new Date(), salary, login, password));
-                System.out.println("Учётная запись успешно создана!");
-            }
-            else System.out.println("Логин занят или пользователь уже существует!");
-        }
+                employees.add(new Employee (nameEmpl, dateOfBirth, gender, numberPh, position, nameDep, formedDepartaments(nameDep), new Date(), salary, login, password));
+                System.out.println("Учётная запись успешно создана!");}
+            else System.out.println("Логин занят или пользователь уже существует!");}
         readAndSave.saveData(employees);
     }
 
@@ -124,11 +164,10 @@ public class Authorization {
                     if (otvet == 1) {
                         employees.remove(verificationAuthorization(login, password));
                         readAndSave.saveData(employees);
-                        proverka = false;
-                    }
+                        readAndSave.saveDataDep(departments);
+                        proverka = false;}
                     if (otvet == 2)
-                        break;
-                }
+                        break;}
             }
         }
     }
@@ -139,8 +178,20 @@ public class Authorization {
         for (Employee employee : employees) {
             if (employee.getLogin().equals(login))
                 return true;
+            else return false;
         }
         return false;
+    }
+
+                            //Проверка имени руковдителя по отделу, чтобы внести его для подчинённых сотрудников
+    public String formedDepartaments(String nameDep) {
+        readData();
+        for (Employee employee : employees) {
+            if (employee.getNameDep().equals(nameDep) && employee.getPosition().equals("Руководитель")) {
+                nameChief = employee.getNameEmpl();
+                return nameChief;}
+        }
+        return null;
     }
 
 
@@ -148,9 +199,7 @@ public class Authorization {
     public Employee verificationAuthorization (String login, String password) {
         for (Employee employee : employees) {
             if (employee.getLogin().equals(login) && employee.getPassword().equals(password))
-                return employee;
-        }
+                return employee;}
         return null;
     }
-
 }
