@@ -21,7 +21,7 @@ public class ReadAndSave {
         catch(IOException | ClassNotFoundException ex){
             System.out.println(ex.getMessage());}
 
-        System.out.println("Список сотрудников в ReadAndSave: " + employees);
+        /*System.out.println("Список сотрудников в ReadAndSave: " + employees);*/
     }
 
         public void readDataDep () {
@@ -31,7 +31,7 @@ public class ReadAndSave {
             catch(IOException | ClassNotFoundException ex){
                 System.out.println(ex.getMessage());}
 
-            System.out.println("Список отделов в ReadAndSave: " + departments);
+            /*System.out.println("Список отделов в ReadAndSave: " + departments);*/
         }
 
 

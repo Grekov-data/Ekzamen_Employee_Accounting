@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.Date;
 
-public class Employee implements Serializable{
+public class Employee implements Serializable {
 
 
     private String nameEmpl;    //ФИО сотрудника
@@ -23,7 +23,12 @@ public class Employee implements Serializable{
     public String getPassword() {return password;}
     public String getPosition() {return position;}
     public String getNameDep() {return this.nameDep;}
+    public Date getDateEmpl() {return dateEmpl;}
+    public String getNameChief() {return nameChief;}
 
+    public int getSalary() {
+        return salary;
+    }
 
     public Employee(String nameEmpl, String dateOfBirth, boolean gender, String numberPh, String position,
                     String nameDep, String nameChief, Date dateEmpl, int salary, String login,
@@ -83,6 +88,6 @@ public class Employee implements Serializable{
 
     public String toString () {
         checkGender(gender);
-        return "\nОтдел - " +nameDep+ ", возглавляет " +nameChief+
-                "\n" +nameEmpl+ " ("+dateOfBirth+ ", " +nameGend+ " пол) - " +position+ ", руководитель - " +nameChief+ ". Принят " +dateEmpl+ ", ЗП = " +salary+ "руб." + "\nЛогин: "+login;}
+        /*\nОтдел - " +nameDep+ ", возглавляет " +nameChief+*/
+        return "\n" +nameEmpl+ " ("+dateOfBirth+ ", " +nameGend+ " пол) - " +position+ ", руководитель - " +nameChief+ ". Принят " +dateEmpl+ ", ЗП = " +salary+ "руб." + "\nЛогин: "+login;}
 }

@@ -1,6 +1,4 @@
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +12,9 @@ public class Authorization {
     private List <Employee> employees;
     private List <Department> departments;
 
+    public void setEmployees(List<Employee> employees) {this.employees = employees;}
+
+    public void setDepartments(List<Department> departments) {this.departments = departments;}
 
     public void readData () {
         try(ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("Employees.bin"))){
@@ -31,7 +32,7 @@ public class Authorization {
         catch(IOException | ClassNotFoundException ex){
             System.out.println(ex.getMessage());}
 
-        System.out.println("Список отделов в Authorization: " + departments);
+        /*System.out.println("Список отделов в Authorization: " + departments);*/
     }
     public List<Employee> getEmployees() {      //ПЕРЕДАЧА СПИСКА ИЗ ФАЙЛА в Program
         return employees;
@@ -39,14 +40,13 @@ public class Authorization {
 
 
     public boolean signIn() {
+        readData();
+        readDataDep();
         Scanner ScanRegStr = new Scanner(System.in);
         while (login != "back to menu") {
-            System.out.println("Введите логин и пароль для входа в систему:" +
-                    "\n(для возврата в меню введите \"back to menu\")");
+            System.out.println("Введите логин и пароль для входа в систему: ");
             System.out.print("логин: ");
             login = ScanRegStr.nextLine();
-            if (login == "back to menu")
-                break;
             System.out.print("пароль: ");
             password = ScanRegStr.nextLine();
             if (verificationAuthorization(login, password) != null) {
@@ -60,6 +60,8 @@ public class Authorization {
 
     public void registration() {                        //РЕГИСТРАЦИЯ НОВОГО ПОЛЬЗОВАТЕЛЯ
         ReadAndSave readAndSave = new ReadAndSave();
+        readData();
+        readDataDep();
         Scanner ScanRegStr = new Scanner(System.in);
         Scanner ScanRegInt = new Scanner(System.in);
         Scanner ScanRegLog = new Scanner(System.in);
@@ -136,9 +138,11 @@ public class Authorization {
                 System.out.print("желаемый пароль: ");
                 password = ScanRegStr.nextLine();
                 employees.add(new Employee (nameEmpl, dateOfBirth, gender, numberPh, position, nameDep, formedDepartaments(nameDep), new Date(), salary, login, password));
-                System.out.println("Учётная запись успешно создана!");}
+                System.out.println("Учётная запись успешно создана!");
+                System.out.println(employees);
+                readAndSave.saveData(employees);}
             else System.out.println("Логин занят или пользователь уже существует!");}
-        readAndSave.saveData(employees);
+        System.out.println("После сохранения!!!\n"+employees);
     }
 
 
@@ -146,19 +150,19 @@ public class Authorization {
         ReadAndSave readAndSave = new ReadAndSave();
         Scanner ScanRegStr = new Scanner(System.in);
         Scanner ScanRegInt = new Scanner(System.in);
+        readData();
+        readDataDep();
         int otvet = 0;
         boolean proverka = true;
         while (login != "back to menu") {
             System.out.println("Авторизируйтесь для удаления своей учётной записи: ");
-            System.out.println("для возврата в меню введите \"back to menu\")");
             System.out.print("логин: ");
             login = ScanRegStr.nextLine();
-            if (login == "back to menu") ;
             System.out.print("пароль: ");
             password = ScanRegStr.nextLine();
             if (verificationAuthorization(login, password) != null) {
                 System.out.print("Уверены, что хотите удалить учётную запись?" +
-                        "\nОтвет (\"да\" - удалить, \"нет\" - возврат в меню): ");
+                        "\nОтвет (\"1\" - удалить, \"2\" - возврат в меню): ");
                 while (proverka == true) {
                     otvet = ScanRegInt.nextInt();
                     if (otvet == 1) {
@@ -197,9 +201,12 @@ public class Authorization {
 
                             //Проверка логина и пароля от учётной записи
     public Employee verificationAuthorization (String login, String password) {
+        readData();
+        readDataDep();
         for (Employee employee : employees) {
             if (employee.getLogin().equals(login) && employee.getPassword().equals(password))
                 return employee;}
         return null;
     }
+
 }
