@@ -177,6 +177,55 @@ public class Authorization {
     }
 
 
+    public void changeInformation () {
+        ReadAndSave readAndSave = new ReadAndSave();
+        Scanner ScanRegStr = new Scanner(System.in);
+        Scanner ScanRegInt = new Scanner(System.in);
+        readData();
+        readDataDep();
+        System.out.println("Авторизируйтесь для внесения изменений: ");
+        System.out.print("логин: ");
+        login = ScanRegStr.nextLine();
+        System.out.print("пароль: ");
+        password = ScanRegStr.nextLine();
+        int num = 0;
+        if (verificationAuthorization(login, password) != null) {
+            while (num != 4) {
+                System.out.print("Ввыберете параметр, который необходимо изменить:" +
+                        "\n1. Заработная плата;" +
+                        "\n2. Номер телефона;" +
+                        "\n3. Пароль;" +
+                        "\n4. Выход." +
+                        "\nИзменить - ");
+                num = ScanRegInt.nextInt();
+                if (num == 1) {
+                    System.out.print("Введите желаемое значение ЗП: ");
+                    int sum = ScanRegInt.nextInt();
+                    for (Employee employee : employees) {
+                        if (employee.getLogin().equals(login)) {
+                            employee.setSalary(sum);
+                            readAndSave.saveData(employees);}}}
+                if (num == 2) {
+                    System.out.print("Введите новый номер: ");
+                    String sum = ScanRegInt.nextLine();
+                    for (Employee employee : employees) {
+                        if (employee.getLogin().equals(login)) {
+                            employee.setNumberPh(sum);
+                            readAndSave.saveData(employees);}}}
+                if (num == 3) {
+                    System.out.print("Введите новый пароль: ");
+                    String sum = ScanRegInt.nextLine();
+                    for (Employee employee : employees) {
+                        if (employee.getLogin().equals(login)) {
+                            employee.setPassword(sum);
+                            readAndSave.saveData(employees);}}}
+                if (num == 4)
+                    break;
+            }
+        }
+    }
+
+
                             //Проверка, имеется ли уже такой логин в системе
     public boolean verificationRegistration (String login) {
         for (Employee employee : employees) {

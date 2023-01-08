@@ -79,14 +79,17 @@ public class Program {
                 continue;
             }
 
-            if (action == 1)
+            if (action == 1)                            //Авторизация
                 authorization.signIn();
 
-            if (action == 2)
+            if (action == 2)                            //Регистрация нового пользователя
                 authorization.registration();
 
-            if (action == 3)
+            if (action == 3)                            //Удаление профиля
                 authorization.deleteProfile();
+
+            if (action == 4)                            //Изменение данных о сотруднике
+                authorization.changeInformation();
 
             if (action == 5) {
                 readAndSave.readData();
