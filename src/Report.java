@@ -87,19 +87,13 @@ public class Report {
     }
 
     public void maxExperience() {
-        System.out.println("Отчёт недоступен!");
-        /*readData();
+        readData();
         readDataDep();
-        System.out.println("ТОП-10 сотрудников с самым большим стажем: ");*/
-        /*employees.stream()
-                .limit(10)
-                .sorted(d->d.getWorkStart().getYear().reversed())
-                .collect(Collectors.toList())
-                .forEach(System.out::println);*/
-        /*Calendar cal = Calendar.getInstance();
+        System.out.println("ТОП-10 сотрудников с самым большим стажем: ");
         employees.stream()
-                .filter(employee -> employee.getDateEmpl()=(cal.get(Calendar.YEAR)))
-                .forEach(System.out::println);*/
+                .sorted(Comparator.comparingLong(e->e.getDateEmpl().getTime()))
+                .limit(10)
+                .forEach(System.out::println);
     }
 
 
